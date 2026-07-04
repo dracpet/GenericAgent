@@ -3172,6 +3172,7 @@ class SB:
             return r
 
         rows = [top]
+        multi = self._picker_mode == 'multi'
         for ln in (ae.question or _t('ask.default_q')).strip().split('\n'):
             rows.extend(row(ln, _BOLD))
         if ae.candidates:
@@ -3180,7 +3181,6 @@ class SB:
             # current row and (in multi) a [ ]/[x] marker; in free-text mode
             # candidates show only as numbered hints — typing the number
             # still picks that row at submit time.
-            multi = self._picker_mode == 'multi'
             for i, c in enumerate(ae.candidates):
                 if multi:
                     mark = '[x]' if i in self._picker_checked else '[ ]'
