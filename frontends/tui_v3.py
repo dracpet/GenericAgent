@@ -5982,7 +5982,12 @@ class SB:
             before_render=_before_render,
             output=_ptk_output,
         )
-        app.cpr_not_supported_callback = lambda: None  # silence the CPR warning
+        # Silence the CPR warning.  The Application's callback is checked by
+        # prompt_toolkit's Application.run() path, but the Renderer captures its
+        # own copy during __init__ and that is the one that actually fires the
+        # warning.  Both must be no-ops to prevent the brief flash on startup.
+        app.cpr_not_supported_callback = lambda: None
+        app.renderer.cpr_not_supported_callback = lambda: None
         self._ptk_app = app
 
         try:
