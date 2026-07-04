@@ -1349,14 +1349,6 @@ def _extract_ask_user(ctx: dict | None) -> AskUserEvent | None:
         return None
     data = payload.get('data') or {}
     candidates = data.get('candidates') or []
-    # v2 parity: skip the ask card when the agent didn't supply candidates —
-    # the 'Waiting for your answer ...' marker already lands in scrollback as
-    # part of the assistant stream, and the user replies via the normal input
-    # box.  Pushing an empty-candidate event onto the queue would route us
-    # through _enter_ask → free-text ask card, which freezes the live region
-    # in some terminals.
-    if not candidates:
-        return None
     return AskUserEvent(
         question=data.get('question', ''),
         candidates=candidates,
