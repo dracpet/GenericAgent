@@ -5972,10 +5972,10 @@ class SB:
 
         # Some terminals (IDE consoles, certain SSH configs, etc.) do not
         # respond to CPR (cursor position report) requests, causing a loud
-        # warning.  Disable CPR probing upfront — GA's scrollback-first
-        # rendering does not depend on absolute cursor position queries.
+        # warning.  Suppress just the warning — keep CPR probing enabled so
+        # that _min_available_height stays accurate for dynamic-height regions
+        # like the ask_user picker card.
         _ptk_output = create_output(stdout=so)
-        _ptk_output.enable_cpr = False
         app = Application(
             layout=layout,
             key_bindings=kb,
@@ -5990,6 +5990,7 @@ class SB:
             before_render=_before_render,
             output=_ptk_output,
         )
+        app.cpr_not_supported_callback = lambda: None  # silence the CPR warning
         self._ptk_app = app
 
         try:
